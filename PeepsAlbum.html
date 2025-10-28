@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peeps - Virtual Album</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%); /* Bright, happy gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Prevent scroll for the stereo */
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+        }
+
+        .stereo-container {
+            display: flex;
+            align-items: flex-end; /* Align speakers and stereo base */
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            width: 95%;
+            box-sizing: border-box;
+        }
+
+        .speaker {
+            flex: 1;
+            min-width: 100px; /* Ensure speakers don't get too small */
+            max-width: 250px;
+            height: 350px; /* Adjust height relative to stereo */
+            background-color: #f0f0f0; /* Light speaker color */
+            border: 5px solid #ccc;
+            border-radius: 15px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.2), 0 10px 20px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .speaker::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            background-color: #444; /* Speaker grille */
+            border-radius: 10px;
+            border: 2px solid #222;
+        }
+
+        .speaker-cone {
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(#666, #222);
+            border-radius: 50%;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            z-index: 1; /* Above grille pseudo-element */
+        }
+
+        /* Basic vibration effect (CSS only, not audio-reactive) */
+        .speaker.vibrate {
+            animation: vibrate-speaker 0.1s infinite alternate;
+        }
+
+        @keyframes vibrate-speaker {
+            from { transform: translateX(-1px); }
+            to { transform: translateX(1px); }
+        }
+
+
+        .stereo-receiver {
+            flex: 2; /* Stereo is wider than speakers */
+            background-color: #333; /* Dark stereo body */
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.7);
+            min-width: 400px;
+            position: relative;
+            border: 3px solid #555;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 400px; /* Fixed height for stereo */
+        }
+
+        .stereo-header {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffeb3b; /* Bright yellow for accents */
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.5em;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffeb3b;
+        }
+
+        .stereo-screen {
+            background-color: #222; /* Dark screen background */
+            border: 3px solid #555;
+            border-radius: 10px;
+            width: 90%;
+            height: 60%; /* Screen takes up most of the space */
+            padding: 15px;
+            overflow-y: auto; /* Scroll if too many songs */
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+            color: #00ff00; /* Retro green screen text */
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8em;
+            line-height: 1.8;
+        }
+
+        .song-list ol {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .song-list li {
+            cursor: pointer;
+            padding: 5px 0;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .song-list li:hover {
+            color: #ffeb3b; /* Highlight on hover */
+            text-shadow: 0 0 5px #ffeb3b;
+        }
+
+        .song-list li.playing {
+            color: #f44336; /* Red for playing track */
+            text-shadow: 0 0 8px #f44336;
+            animation: pulse-playing 1s infinite alternate;
+        }
+
+        @keyframes pulse-playing {
+            from { opacity: 1; }
+            to { opacity: 0.7; }
+        }
+
+        .controls {
+            width: 90%;
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            gap: 10px; /* Space between buttons */
+        }
+
+        .control-button {
+            background-color: #f44336; /* Red button */
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .control-button:hover {
+            background-color: #e53935;
+            transform: translateY(-2px);
+        }
+
+        .control-button:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        audio {
+            width: 0;
+            height: 0;
+            visibility: hidden; /* Hide the default audio player */
+            position: absolute;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .stereo-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .speaker {
+                height: 250px;
+                width: 150px;
+                max-width: none;
+            }
+
+            .stereo-receiver {
+                min-width: unset;
+                width: 95%;
+                height: 350px;
+            }
+
+            .stereo-header {
+                font-size: 1.2em;
+            }
+
+            .stereo-screen {
+                font-size: 0.7em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stereo-container">
+        <div class="speaker" id="left-speaker">
+             <div class="speaker-cone"></div>
+        </div>
+
+        <div class="stereo-receiver">
+            <div class="stereo-header">Peeps</div>
+            <div class="stereo-screen">
+                <!-- Add an element for error messages -->
+                <div id="error-message" style="color: #f44336; display: none; margin-bottom: 10px; font-size: 0.9em; word-wrap: break-word;"></div>
+                <ol id="song-list">
+                    
+</ol>
+            </div>
+            <div classs="controls">
+                <button class="control-button" id="prev-btn">PREV</button>
+                <button class="control-button" id="play-pause-btn">PLAY</button>
+                <button class="control-button" id="next-btn">NEXT</button>
+            </div>
+        </div>
+
+        <div class="speaker" id="right-speaker">
+            <div class="speaker-cone"></div>
+        </div>
+    </div>
+
+    <audio id="audio-player"></audio>
+
+    <script>
+        // UPDATED: Changed Google Drive links to local, relative paths.
+        // You will need to create an 'audio' folder and add your MP3s to it.
+        const songs = [
+            { title: "Jeremy and Jerome", url: "audio/jeremy-and-jerome.mp3" },
+            { title: "Kathleen’s Secret", url: "audio/kathleens-secret.mp3" },
+            { title: "Claudia Goes North", url: "audio/claudia-goes-north.mp3" },
+            { title: "Dee, Deep Sea", url: "audio/dee-deep-sea.mp3" },
+            { title: "Brett’s Big Realization", url: "audio/bretts-big-realization.mp3" },
+            { title: "Hairy Joe", url: "audio/hairy-joe.mp3" },
+            { title: "Rebecca’s Rain", url: "audio/rebeccas-rain.mp3" },
+            { title: "Devin the Sparky Sailor", url: "audio/devin-the-sparky-sailor.mp3" },
+            { title: "The Ballad of Matt St. Onge", url: "audio/the-ballad-of-matt-st-onge.mp3" },
+            { title: "Oh, Jeremy’s Mom!", url: "audio/oh-jeremys-mom.mp3" }
+        ];
+        
+        const audioPlayer = document.getElementById('audio-player');
+        const songListElement = document.getElementById('song-list');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const leftSpeaker = document.getElementById('left-speaker');
+        const rightSpeaker = document.getElementById('right-speaker');
+        const errorMessageElement = document.getElementById('error-message');
+
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let hasUserInteracted = false;
+
+        function loadSong(index) {
+            currentSongIndex = index;
+            audioPlayer.src = songs[currentSongIndex].url;
+            updateSongListDisplay();
+            hideError();
+        }
+
+        function playSong() {
+            const playPromise = audioPlayer.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    playPauseBtn.textContent = 'PAUSE';
+                    isPlaying = true;
+                    leftSpeaker.classList.add('vibrate');
+                    rightSpeaker.classList.add('vibrate');
+                    hideError();
+                })
+                .catch(error => {
+                    console.error("Play error:", error);
+                    pauseSong(); 
+                    
+                    if (error.name === 'NotAllowedError') {
+                        showError("Click 'PLAY' to begin playback.");
+                    } else if (error.name === 'NotSupportedError') {
+                        showError(`Error: Could not play song. Source for "${songs[currentSongIndex].title}" may be invalid or blocked.`);
+                        if (hasUserInteracted) { 
+                            setTimeout(playNextSong, 1000); 
+                        }
+                    } else {
+                        showError("Playback failed. Click play to try again.");
+                    }
+                });
+            }
+        }
+
+        function pauseSong() {
+            audioPlayer.pause();
+            playPauseBtn.textContent = 'PLAY';
+            isPlaying = false;
+            leftSpeaker.classList.remove('vibrate');
+            rightSpeaker.classList.remove('vibrate');
+        }
+
+        function showError(message) {
+            errorMessageElement.textContent = message;
+            errorMessageElement.style.display = 'block';
+            console.error(message);
+        }
+
+        function hideError() {
+            errorMessageElement.textContent = '';
+            errorMessageElement.style.display = 'none';
+        }
+
+        function togglePlayPause() {
+            hasUserInteracted = true;
+            if (isPlaying) {
+                pauseSong();
+            } else {
+                playSong();
+            }
+        }
+
+        function playNextSong() {
+            hasUserInteracted = true;
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            loadSong(currentSongIndex);
+            playSong();
+        }
+
+        function playPrevSong() {
+            hasUserInteracted = true;
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            loadSong(currentSongIndex);
+            playSong();
+        }
+
+        function updateSongListDisplay() {
+            songListElement.innerHTML = ''; // Clear existing list
+            songs.forEach((song, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${index + 1}. ${song.title}`;
+                listItem.dataset.index = index;
+                if (index === currentSongIndex) {
+                    listItem.classList.add('playing');
+                }
+                listItem.addEventListener('click', () => {
+                    hasUserInteracted = true;
+                    if (index !== currentSongIndex || !isPlaying) { 
+                        loadSong(index);
+                        playSong();
+                    } else if (index === currentSongIndex && isPlaying) { 
+                        pauseSong();
+                    }
+                });
+                songListElement.appendChild(listItem);
+            });
+        }
+
+        // Event Listeners
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        prevBtn.addEventListener('click', playPrevSong);
+        nextBtn.addEventListener('click', playNextSong);
+        audioPlayer.addEventListener('ended', playNextSong); 
+
+        audioPlayer.addEventListener('error', (e) => {
+            let errorMsg = `Error loading: "${songs[currentSongIndex].title}".`;
+            
+            if (audioPlayer.error) {
+                switch (audioPlayer.error.code) {
+                    case audioPlayer.error.MEDIA_ERR_ABORTED:
+                        errorMsg += " Playback aborted.";
+                        break;
+                    case audioPlayer.error.MEDIA_ERR_NETWORK:
+                        errorMsg += " A network error occurred.";
+                        break;
+                    case audioPlayer.error.MEDIA_ERR_DECODE:
+                        errorMsg += " Decoding error.";
+                        break;
+                    case audioPlayer.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                        // This is the error we expect now if the file is missing
+                        errorMsg += " Source not found. Make sure the file exists in the 'audio' folder.";
+                        break;
+                    default:
+                        errorMsg += " An unknown error occurred.";
+                        break;
+                }
+            } else {
+                 errorMsg += " Source not supported or found.";
+            }
+
+            showError(errorMsg);
+            pauseSong(); 
+
+            if (hasUserInteracted) {
+                console.log("Attempting to skip to next song...");
+                setTimeout(playNextSong, 1000); 
+            } else {
+                console.log("Audio error on load, waiting for user interaction to skip.");
+            }
+        });
+
+
+        // Initial setup
+        updateSongListDisplay();
+        loadSong(currentSongIndex); 
+    </script>
+</body>
+</html>
+
