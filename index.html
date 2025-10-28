@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peeps - Virtual Album</title>
+    <!-- Using Google Fonts for the retro digital look -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
+        /* Basic page setup */
         body {
             font-family: 'Orbitron', sans-serif;
             background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%); /* Bright, happy gradient */
@@ -19,6 +21,7 @@
             text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
         }
 
+        /* Main container for the stereo and speakers */
         .stereo-container {
             display: flex;
             align-items: flex-end; /* Align speakers and stereo base */
@@ -27,313 +30,320 @@
             max-width: 1200px;
             width: 95%;
             box-sizing: border-box;
+            /* Responsive layout: stack vertically on small screens */
+            flex-direction: column;
+            align-items: center;
         }
 
+        /* Speakers */
         .speaker {
-            flex: 1;
-            min-width: 100px; /* Ensure speakers don't get too small */
-            max-width: 250px;
-            height: 350px; /* Adjust height relative to stereo */
-            background-color: #f0f0f0; /* Light speaker color */
-            border: 5px solid #ccc;
-            border-radius: 15px;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.2), 0 10px 20px rgba(0,0,0,0.3);
+            background: #444; /* Dark gray speaker color */
+            border: 8px solid #222; /* Darker border */
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.4);
+            width: 200px;
+            height: 300px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
             align-items: center;
-            padding: 15px;
-            position: relative;
-            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        .speaker::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            bottom: 20px;
-            background-color: #444; /* Speaker grille */
-            border-radius: 10px;
-            border: 2px solid #222;
+        .speaker-grill {
+            background: #111;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            border: 4px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .speaker-cone {
-            position: absolute;
-            width: 60%;
-            height: 60%;
-            background: radial-gradient(#666, #222);
+            background: #2a2a2a;
             border-radius: 50%;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-            z-index: 1; /* Above grille pseudo-element */
+            width: 60px;
+            height: 60px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
         }
 
-        /* Basic vibration effect (CSS only, not audio-reactive) */
-        .speaker.vibrate {
-            animation: vibrate-speaker 0.1s infinite alternate;
+        .speaker-grill.small {
+            width: 60px;
+            height: 60px;
         }
 
-        @keyframes vibrate-speaker {
-            from { transform: translateX(-1px); }
-            to { transform: translateX(1px); }
+        .speaker-cone.small {
+            width: 25px;
+            height: 25px;
         }
 
-
-        .stereo-receiver {
-            flex: 2; /* Stereo is wider than speakers */
-            background-color: #333; /* Dark stereo body */
-            border-radius: 20px;
+        /* Main stereo unit */
+        .stereo {
+            background: linear-gradient(145deg, #silver, #e0e0e0);
+            border-radius: 15px;
+            border: 4px solid #aaa;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.5);
+            width: 100%;
+            max-width: 500px;
             padding: 25px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.7);
-            min-width: 400px;
-            position: relative;
-            border: 3px solid #555;
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            height: 400px; /* Fixed height for stereo */
+            gap: 20px;
         }
 
-        .stereo-header {
-            width: 100%;
-            text-align: center;
-            margin-bottom: 20px;
-            color: #ffeb3b; /* Bright yellow for accents */
-            font-family: 'Press Start 2P', cursive;
-            font-size: 1.5em;
-            letter-spacing: 2px;
-            text-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffeb3b;
-        }
-
+        /* Digital screen display */
         .stereo-screen {
-            background-color: #222; /* Dark screen background */
-            border: 3px solid #555;
-            border-radius: 10px;
-            width: 90%;
-            height: 60%; /* Screen takes up most of the space */
-            padding: 15px;
-            overflow-y: auto; /* Scroll if too many songs */
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
-            color: #00ff00; /* Retro green screen text */
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.8em;
-            line-height: 1.8;
+            font-family: 'Press Start 2P', cursive; /* Pixel font */
+            background: #c0fddc; /* Light green LCD background */
+            border: 4px solid #888;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+            text-shadow: 0 0 2px rgba(6, 99, 44, 0.5);
+            min-height: 70px; /* Ensure screen has height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.5;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
-        .song-list ol {
+        .stereo-screen .now-playing-title {
+            font-size: 11px;
+            color: #222;
+            margin-bottom: 5px;
+        }
+        
+        .stereo-screen .error-message {
+            font-size: 10px;
+            color: #d90000; /* Red error text */
+            font-weight: bold;
+        }
+
+        /* Song list container */
+        .song-list-container {
+            background: rgba(0, 0, 0, 0.05);
+            border: 2px solid #bbb;
+            border-radius: 8px;
+            height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Song list styles */
+        .song-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
         .song-list li {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
             cursor: pointer;
-            padding: 5px 0;
-            transition: color 0.2s ease-in-out;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .song-list li:hover {
-            color: #ffeb3b; /* Highlight on hover */
-            text-shadow: 0 0 5px #ffeb3b;
+            background: rgba(255, 255, 255, 0.9);
+            transform: scale(1.02);
         }
 
+        /* Highlight the currently playing song */
         .song-list li.playing {
-            color: #f44336; /* Red for playing track */
-            text-shadow: 0 0 8px #f44336;
-            animation: pulse-playing 1s infinite alternate;
+            background: #fcf8a0; /* Yellow highlight */
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 230, 0, 0.7);
         }
 
-        @keyframes pulse-playing {
-            from { opacity: 1; }
-            to { opacity: 0.7; }
-        }
-
+        /* Control buttons */
         .controls {
-            width: 90%;
             display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            gap: 10px; /* Space between buttons */
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
         }
 
-        .control-button {
-            background-color: #f44336; /* Red button */
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
+        .control-btn {
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.9em;
-            box-shadow: 0 3px 5px rgba(0,0,0,0.3);
-            transition: background-color 0.2s, transform 0.1s;
+            font-weight: bold;
+            font-size: 16px;
+            background: linear-gradient(145deg, #f0f0f0, #c0c0c0);
+            border: 3px solid #999;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
         }
 
-        .control-button:hover {
-            background-color: #e53935;
-            transform: translateY(-2px);
+        .control-btn:active {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transform: translateY(2px);
+            background: linear-gradient(145deg, #c0c0c0, #f0f0f0);
         }
 
-        .control-button:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        #playPauseBtn {
+            width: 70px;
+            height: 70px;
+            font-size: 20px;
         }
 
-        audio {
-            width: 0;
-            height: 0;
-            visibility: hidden; /* Hide the default audio player */
-            position: absolute;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
+        /* Responsive styles for smaller screens */
+        @media (min-width: 900px) {
             .stereo-container {
-                flex-direction: column;
-                align-items: center;
-                gap: 15px;
+                flex-direction: row; /* Horizontal layout on larger screens */
+                align-items: flex-end;
             }
-
             .speaker {
-                height: 250px;
-                width: 150px;
-                max-width: none;
-            }
-
-            .stereo-receiver {
-                min-width: unset;
-                width: 95%;
-                height: 350px;
-            }
-
-            .stereo-header {
-                font-size: 1.2em;
-            }
-
-            .stereo-screen {
-                font-size: 0.7em;
+                width: 250px;
+                height: 400px;
             }
         }
     </style>
 </head>
 <body>
 
+    <!-- Main HTML Structure -->
     <div class="stereo-container">
-        <div class="speaker" id="left-speaker">
-             <div class="speaker-cone"></div>
-        </div>
-
-        <div class="stereo-receiver">
-            <div class="stereo-header">Peeps</div>
-            <div class="stereo-screen">
-                <!-- Add an element for error messages -->
-                <div id="error-message" style="color: #f44336; display: none; margin-bottom: 10px; font-size: 0.9em; word-wrap: break-word;"></div>
-                <ol id="song-list">
-                    
-</ol>
+        <!-- Left Speaker -->
+        <div class="speaker">
+            <div class="speaker-grill">
+                <div class="speaker-cone"></div>
             </div>
-            <div classs="controls">
-                <button class="control-button" id="prev-btn">PREV</button>
-                <button class="control-button" id="play-pause-btn">PLAY</button>
-                <button class="control-button" id="next-btn">NEXT</button>
+            <div class="speaker-grill small">
+                <div class="speaker-cone small"></div>
             </div>
         </div>
 
-        <div class="speaker" id="right-speaker">
-            <div class="speaker-cone"></div>
+        <!-- Stereo Unit -->
+        <div class="stereo">
+            <!-- Digital Display -->
+            <div class="stereo-screen" id="stereoScreen">
+                <div class-="now-playing-title" id="nowPlayingTitle">Now Playing:</div>
+                <div id="nowPlaying">Select a song</div>
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+
+            <!-- Song List -->
+            <div class="song-list-container">
+                <ul class="song-list" id="songList">
+                    <!-- Songs will be populated by JavaScript -->
+                </ul>
+            </div>
+
+            <!-- Playback Controls -->
+            <div class="controls">
+                <button class="control-btn" id="prevBtn" title="Previous">«</button>
+                <button class="control-btn" id="playPauseBtn" title="Play/Pause">►</button>
+                <button class="control-btn" id="nextBtn" title="Next">»</button>
+            </div>
+        </div>
+
+        <!-- Right Speaker -->
+        <div class="speaker">
+            <div class="speaker-grill">
+                <div class="speaker-cone"></div>
+            </div>
+            <div class="speaker-grill small">
+                <div class="speaker-cone small"></div>
+            </div>
         </div>
     </div>
 
-    <audio id="audio-player"></audio>
+    <!-- The actual audio element, hidden from view -->
+    <audio id="audioPlayer"></audio>
 
+    <!-- JavaScript for functionality -->
     <script>
-        // UPDATED: Changed Google Drive links to local, relative paths.
-        // You will need to create an 'audio' folder and add your MP3s to it.
+        // --- Song Data ---
+        // IMPORTANT: These URLs must exactly match your folder and file names on GitHub.
+        // We are using "Audio/" (with a capital A) as you identified.
         const songs = [
-            { title: "Jeremy and Jerome", url: "audio/jeremy-and-jerome.mp3" },
-            { title: "Kathleen’s Secret", url: "audio/kathleens-secret.mp3" },
-            { title: "Claudia Goes North", url: "audio/claudia-goes-north.mp3" },
-            { title: "Dee, Deep Sea", url: "audio/dee-deep-sea.mp3" },
-            { title: "Brett’s Big Realization", url: "audio/bretts-big-realization.mp3" },
-            { title: "Hairy Joe", url: "audio/hairy-joe.mp3" },
-            { title: "Rebecca’s Rain", url: "audio/rebeccas-rain.mp3" },
-            { title: "Devin the Sparky Sailor", url: "audio/devin-the-sparky-sailor.mp3" },
-            { title: "The Ballad of Matt St. Onge", url: "audio/the-ballad-of-matt-st-onge.mp3" },
-            { title: "Oh, Jeremy’s Mom!", url: "audio/oh-jeremys-mom.mp3" }
+            { title: "Jeremy and Jerome", url: "Audio/jeremy-and-jerome.mp3" },
+            { title: "Kathleen’s Secret", url: "Audio/kathleens-secret.mp3" },
+            { title: "Claudia Goes North", url: "Audio/claudia-goes-north.mp3" },
+            { title: "Dee, Deep Sea", url: "Audio/dee-deep-sea.mp3" },
+            { title: "Brett’s Big Realization", url: "Audio/bretts-big-realization.mp3" },
+            { title: "Hairy Joe", url: "Audio/hairy-joe.mp3" },
+            { title: "Rebecca’s Rain", url: "Audio/rebeccas-rain.mp3" },
+            { title: "Devin the Sparky Sailor", url: "Audio/devin-the-sparky-sailor.mp3" },
+            { title: "The Ballad of Matt St. Onge", url: "Audio/the-ballad-of-matt-st-onge.mp3" },
+            { title: "Oh, Jeremy's Mom", url: "Audio/oh-jeremys-mom.mp3" }
         ];
-        
-        const audioPlayer = document.getElementById('audio-player');
-        const songListElement = document.getElementById('song-list');
-        const playPauseBtn = document.getElementById('play-pause-btn');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const leftSpeaker = document.getElementById('left-speaker');
-        const rightSpeaker = document.getElementById('right-speaker');
-        const errorMessageElement = document.getElementById('error-message');
 
+        // --- DOM Elements ---
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const songListElement = document.getElementById('songList');
+        const nowPlayingElement = document.getElementById('nowPlaying');
+        const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+        const errorMessageElement = document.getElementById('errorMessage');
+
+        // --- State Variables ---
         let currentSongIndex = 0;
         let isPlaying = false;
-        let hasUserInteracted = false;
+        let hasUserInteracted = false; // Tracks if user has clicked play, next, prev, or a song.
 
+        // --- Core Functions ---
+
+        // Loads a song into the audio player
         function loadSong(index) {
+            clearError();
             currentSongIndex = index;
-            audioPlayer.src = songs[currentSongIndex].url;
+            audioPlayer.src = songs[index].url;
+            nowPlayingElement.textContent = songs[index].title;
+            nowPlayingTitle.style.display = 'block'; // Show "Now Playing:"
             updateSongListDisplay();
-            hideError();
         }
 
+        // Plays the currently loaded song
         function playSong() {
-            const playPromise = audioPlayer.play();
-
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    playPauseBtn.textContent = 'PAUSE';
-                    isPlaying = true;
-                    leftSpeaker.classList.add('vibrate');
-                    rightSpeaker.classList.add('vibrate');
-                    hideError();
-                })
-                .catch(error => {
-                    console.error("Play error:", error);
-                    pauseSong(); 
-                    
-                    if (error.name === 'NotAllowedError') {
-                        showError("Click 'PLAY' to begin playback.");
-                    } else if (error.name === 'NotSupportedError') {
-                        showError(`Error: Could not play song. Source for "${songs[currentSongIndex].title}" may be invalid or blocked.`);
-                        if (hasUserInteracted) { 
-                            setTimeout(playNextSong, 1000); 
-                        }
-                    } else {
-                        showError("Playback failed. Click play to try again.");
-                    }
-                });
-            }
+            hasUserInteracted = true; // Mark interaction
+            isPlaying = true;
+            playPauseBtn.textContent = '❚❚'; // Pause symbol
+            audioPlayer.play().catch(error => {
+                console.error("Play error:", error);
+                // Don't show a user-facing error here, the 'onerror' event will handle it
+                // We just want to catch the promise rejection
+                if (!isPlaying) {
+                     showError("Playback failed. Click play to try again.");
+                }
+            });
+            updateSongListDisplay();
         }
 
+        // Pauses the currently playing song
         function pauseSong() {
-            audioPlayer.pause();
-            playPauseBtn.textContent = 'PLAY';
             isPlaying = false;
-            leftSpeaker.classList.remove('vibrate');
-            rightSpeaker.classList.remove('vibrate');
+            playPauseBtn.textContent = '►'; // Play symbol
+            audioPlayer.pause();
+            updateSongListDisplay();
         }
 
-        function showError(message) {
-            errorMessageElement.textContent = message;
-            errorMessageElement.style.display = 'block';
-            console.error(message);
-        }
-
-        function hideError() {
-            errorMessageElement.textContent = '';
-            errorMessageElement.style.display = 'none';
-        }
-
+        // Toggles between play and pause
         function togglePlayPause() {
-            hasUserInteracted = true;
+            hasUserInteracted = true; // Mark interaction
             if (isPlaying) {
                 pauseSong();
             } else {
@@ -341,35 +351,50 @@
             }
         }
 
-        function playNextSong() {
-            hasUserInteracted = true;
-            currentSongIndex = (currentSongIndex + 1) % songs.length;
-            loadSong(currentSongIndex);
-            playSong();
-        }
-
+        // Plays the previous song in the list
         function playPrevSong() {
-            hasUserInteracted = true;
-            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            hasUserInteracted = true; // Mark interaction
+            currentSongIndex--;
+            if (currentSongIndex < 0) {
+                currentSongIndex = songs.length - 1; // Wrap around to last song
+            }
             loadSong(currentSongIndex);
             playSong();
         }
 
+        // Plays the next song in the list
+        function playNextSong() {
+            hasUserInteracted = true; // Mark interaction
+            currentSongIndex++;
+            if (currentSongIndex >= songs.length) {
+                currentSongIndex = 0; // Wrap around to first song
+            }
+            loadSong(currentSongIndex);
+            playSong();
+        }
+
+        // Updates the song list display to highlight the current song
         function updateSongListDisplay() {
             songListElement.innerHTML = ''; // Clear existing list
             songs.forEach((song, index) => {
                 const listItem = document.createElement('li');
                 listItem.textContent = `${index + 1}. ${song.title}`;
                 listItem.dataset.index = index;
-                if (index === currentSongIndex) {
+                
+                // Highlight if it's the current song AND it's playing
+                if (index === currentSongIndex && isPlaying) {
                     listItem.classList.add('playing');
                 }
+                
+                // Click event for each song in the list
                 listItem.addEventListener('click', () => {
-                    hasUserInteracted = true;
-                    if (index !== currentSongIndex || !isPlaying) { 
+                    hasUserInteracted = true; // Mark interaction
+                    if (index !== currentSongIndex) { // If new song
                         loadSong(index);
                         playSong();
-                    } else if (index === currentSongIndex && isPlaying) { 
+                    } else if (index === currentSongIndex && !isPlaying) { // If current song is paused, play it
+                        playSong();
+                    } else if (index === currentSongIndex && isPlaying) { // If current song is playing, pause it
                         pauseSong();
                     }
                 });
@@ -377,15 +402,22 @@
             });
         }
 
-        // Event Listeners
-        playPauseBtn.addEventListener('click', togglePlayPause);
-        prevBtn.addEventListener('click', playPrevSong);
-        nextBtn.addEventListener('click', playNextSong);
-        audioPlayer.addEventListener('ended', playNextSong); 
+        // --- Error Handling ---
+        function showError(message) {
+            console.error(message);
+            nowPlayingElement.textContent = "Error";
+            nowPlayingTitle.style.display = 'none'; // Hide "Now Playing:"
+            errorMessageElement.textContent = message;
+        }
 
-        audioPlayer.addEventListener('error', (e) => {
+        function clearError() {
+            errorMessageElement.textContent = '';
+        }
+
+        // Event listener for when the audio file itself throws an error
+        audioPlayer.addEventListener('error', () => {
             let errorMsg = `Error loading: "${songs[currentSongIndex].title}".`;
-            
+
             if (audioPlayer.error) {
                 switch (audioPlayer.error.code) {
                     case audioPlayer.error.MEDIA_ERR_ABORTED:
@@ -399,7 +431,7 @@
                         break;
                     case audioPlayer.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
                         // This is the error we expect now if the file is missing
-                        errorMsg += " Source not found. Make sure the file exists in the 'audio' folder.";
+                        errorMsg += " Source not found. Make sure the file exists in the 'Audio' folder and filenames match.";
                         break;
                     default:
                         errorMsg += " An unknown error occurred.";
@@ -410,20 +442,30 @@
             }
 
             showError(errorMsg);
-            pauseSong(); 
+            pauseSong(); // Set state to paused
 
+            // Only try to auto-skip if the user has already started playing the music
             if (hasUserInteracted) {
                 console.log("Attempting to skip to next song...");
-                setTimeout(playNextSong, 1000); 
+                // Wait a second before skipping so the user can see the error
+                setTimeout(playNextSong, 1500); 
             } else {
                 console.log("Audio error on load, waiting for user interaction to skip.");
             }
         });
 
 
-        // Initial setup
+        // --- Event Listeners ---
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        prevBtn.addEventListener('click', playPrevSong);
+        nextBtn.addEventListener('click', playNextSong);
+        
+        // Auto-play next song when one finishes
+        audioPlayer.addEventListener('ended', playNextSong); 
+
+        // --- Initial Setup ---
         updateSongListDisplay();
-        loadSong(currentSongIndex); 
+        loadSong(currentSongIndex); // Load the first song initially (but don't play it)
     </script>
 </body>
 </html>
