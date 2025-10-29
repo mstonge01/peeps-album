@@ -4,30 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peeps - Virtual Album</title>
-    <!-- Using Google Fonts for the retro digital look -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Updated Google Fonts for 'Cabin' (rustic) and 'Press Start 2P' (digital) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         /* Basic page setup */
         body {
-            font-family: 'Orbitron', sans-serif;
-            background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%); /* Bright, happy gradient */
+            /* NEW: Swapped 'Orbitron' for 'Cabin' */
+            font-family: 'Cabin', sans-serif;
+            /* NEW: Camping green background gradient */
+            background: linear-gradient(135deg, #588157 0%, #3A5A40 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            /* Allow scrolling on small screens if content overflows */
             overflow: auto;
-            color: #333;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+            /* NEW: Creamy white text for better contrast */
+            color: #F0EAD6;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         /* Main container for the stereo */
         .stereo-container {
             display: flex;
-            flex-direction: column; /* Stack title and stereo vertically */
-            justify-content: center; /* Center the stereo */
-            align-items: center; /* Center the stereo */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             gap: 20px;
             padding: 20px;
             max-width: 1200px;
@@ -35,38 +37,30 @@
             box-sizing: border-box;
         }
 
-        /* NEW: Album Title Styling */
+        /* Album Title Styling */
         #albumTitle {
             font-family: 'Press Start 2P', cursive;
-            font-size: 3.5rem; /* Large font size */
-            color: #fff;
-            /* Cool 3D/shadow effect */
-            text-shadow: 
-                0 1px 0 #ccc,
-                0 2px 0 #c9c9c9,
-                0 3px 0 #bbb,
-                0 4px 0 #b9b9b9,
-                0 5px 0 #aaa,
-                0 6px 1px rgba(0,0,0,.1),
-                0 0 5px rgba(0,0,0,.1),
-                0 1px 3px rgba(0,0,0,.3),
-                0 3px 5px rgba(0,0,0,.2),
-                0 5px 10px rgba(0,0,0,.25),
-                0 10px 10px rgba(0,0,0,.2),
-                0 20px 20px rgba(0,0,0,.15);
-            margin: 0 0 10px 0; /* Space below title */
+            font-size: 3.5rem;
+            /* NEW: Creamy white title color */
+            color: #F0EAD6;
+            /* NEW: Simplified shadow for better readability on green */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin: 0 0 10px 0;
             text-align: center;
             line-height: 1;
         }
 
         /* Main stereo unit */
         .stereo {
-            background: linear-gradient(145deg, #silver, #e0e0e0);
+            /* NEW: Wood-grain brown gradient */
+            background: linear-gradient(145deg, #8B4513, #A0522D);
+            /* NEW: Dark brown border */
             border-radius: 15px;
-            border: 4px solid #aaa;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.5);
+            border: 4px solid #5C3D2E;
+            /* NEW: Updated shadow */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.2);
             width: 100%;
-            max-width: 500px; /* Stereo now defines the max width */
+            max-width: 500px;
             padding: 25px;
             box-sizing: border-box;
             display: flex;
@@ -76,16 +70,20 @@
 
         /* Digital screen display */
         .stereo-screen {
-            font-family: 'Press Start 2P', cursive; /* Pixel font */
-            background: #c0fddc; /* Light green LCD background */
-            border: 4px solid #888;
+            font-family: 'Press Start 2P', cursive;
+            /* NEW: Khaki/tan background color */
+            background: #F5E8C7;
+            /* NEW: Dark brown border */
+            border: 4px solid #5C3D2E;
             border-radius: 8px;
             padding: 20px;
             text-align: center;
             font-size: 14px;
+            /* NEW: Dark text for tan background */
             color: #333;
-            text-shadow: 0 0 2px rgba(6, 99, 44, 0.5);
-            min-height: 70px; /* Ensure screen has height */
+            /* NEW: Softer shadow for light background */
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+            min-height: 70px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -102,7 +100,7 @@
         
         .stereo-screen .error-message {
             font-size: 10px;
-            color: #d90000; /* Red error text */
+            color: #d90000;
             font-weight: bold;
         }
 
@@ -115,15 +113,16 @@
             margin-top: 8px;
             opacity: 0.8;
             line-height: 1.4;
-            /* Ensures text wraps */
             white-space: pre-wrap;
             word-wrap: break-word;
         }
 
         /* Song list container */
         .song-list-container {
-            background: rgba(0, 0, 0, 0.05);
-            border: 2px solid #bbb;
+            /* NEW: Lighter, transparent white for contrast on wood */
+            background: rgba(255, 255, 255, 0.1);
+            /* NEW: Mid-brown border */
+            border: 2px solid #7B5E57;
             border-radius: 8px;
             height: 150px;
             overflow-y: auto;
@@ -141,7 +140,10 @@
         .song-list li {
             padding: 8px 12px;
             margin-bottom: 5px;
-            background: rgba(255, 255, 255, 0.5);
+            /* NEW: Semi-transparent tan background */
+            background: rgba(245, 232, 199, 0.7);
+            /* NEW: Dark text */
+            color: #333;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -150,15 +152,19 @@
         }
 
         .song-list li:hover {
-            background: rgba(255, 255, 255, 0.9);
+            /* NEW: Solid tan background on hover */
+            background: rgba(245, 232, 199, 1);
             transform: scale(1.02);
         }
 
         /* Highlight the currently playing song */
         .song-list li.playing {
-            background: #fcf8a0; /* Yellow highlight */
+            /* NEW: Darker tan highlight */
+            background: #D2B48C;
             font-weight: bold;
-            box-shadow: 0 0 10px rgba(255, 230, 0, 0.7);
+            color: #000;
+            /* NEW: Softer shadow */
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
         }
 
         /* Progress Bar Container */
@@ -174,23 +180,26 @@
         #currentTime, #totalTime {
             font-family: 'Press Start 2P', cursive;
             font-size: 10px;
-            color: #333;
+            /* NEW: Creamy white text */
+            color: #F0EAD6;
             min-width: 40px;
             text-align: center;
         }
 
         /* Progress Bar Styling */
         #progressBar {
-            flex-grow: 1; /* Take up remaining space */
-            -webkit-appearance: none; /* Remove default styling */
+            flex-grow: 1;
+            -webkit-appearance: none;
             appearance: none;
             width: 100%;
             height: 8px;
-            background: #555; /* Dark track background */
+            /* NEW: Dark brown track */
+            background: #5C3D2E;
             border-radius: 4px;
             outline: none;
             cursor: pointer;
-            border: 2px solid #999;
+            /* NEW: Mid-brown border */
+            border: 2px solid #7B5E57;
         }
 
         /* Progress Bar Thumb (Chrome/Safari) */
@@ -199,10 +208,12 @@
             appearance: none;
             width: 18px;
             height: 18px;
-            background: #f0f0f0; /* Light button color */
+            /* NEW: Tan thumb */
+            background: #F5E8C7;
             border-radius: 50%;
-            border: 2px solid #333;
-            margin-top: -7px; /* Center thumb on track */
+            /* NEW: Dark brown border */
+            border: 2px solid #5C3D2E;
+            margin-top: -7px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
@@ -210,9 +221,9 @@
         #progressBar::-moz-range-thumb {
             width: 18px;
             height: 18px;
-            background: #f0f0f0;
+            background: #F5E8C7;
             border-radius: 50%;
-            border: 2px solid #333;
+            border: 2px solid #5C3D2E;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             cursor: pointer;
         }
@@ -227,11 +238,13 @@
         }
 
         .control-btn {
-            font-family: 'Orbitron', sans-serif;
+            font-family: 'Cabin', sans-serif; /* NEW: Matched font */
             font-weight: bold;
             font-size: 16px;
-            background: linear-gradient(145deg, #f0f0f0, #c0c0c0);
-            border: 3px solid #999;
+            /* NEW: Green gradient for buttons */
+            background: linear-gradient(145deg, #588157, #3A5A40);
+            /* NEW: Darker green border */
+            border: 3px solid #2A402B;
             border-radius: 50%;
             width: 60px;
             height: 60px;
@@ -241,13 +254,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #333;
+            /* NEW: Creamy white text */
+            color: #F0EAD6;
         }
 
         .control-btn:active {
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             transform: translateY(2px);
-            background: linear-gradient(145deg, #c0c0c0, #f0f0f0);
+            /* NEW: Inverted green gradient */
+            background: linear-gradient(145deg, #3A5A40, #588157);
         }
 
         #playPauseBtn {
@@ -259,7 +274,7 @@
         /* Responsive tweak for title on small screens */
         @media (max-width: 600px) {
             #albumTitle {
-                font-size: 2.5rem; /* Make title a bit smaller on mobile */
+                font-size: 2.5rem;
             }
         }
 
@@ -270,7 +285,6 @@
     <!-- Main HTML Structure -->
     <div class="stereo-container">
         
-        <!-- NEW: Album Title -->
         <h1 id="albumTitle">PEEPS</h1>
 
         <!-- Stereo Unit -->
@@ -279,7 +293,6 @@
             <div class="stereo-screen" id="stereoScreen">
                 <div class="now-playing-title" id="nowPlayingTitle">Now Playing:</div>
                 <div id="nowPlaying">Select a song</div>
-                <!-- Song Brief Display -->
                 <div class="song-brief" id="nowPlayingBrief"></div>
                 <div class="error-message" id="errorMessage"></div>
             </div>
@@ -311,7 +324,7 @@
     <!-- The actual audio element, hidden from view -->
     <audio id="audioPlayer"></audio>
 
-    <!-- JavaScript for functionality -->
+    <!-- JavaScript for functionality (unchanged) -->
     <script>
         // --- Song Data ---
         const songs = [
