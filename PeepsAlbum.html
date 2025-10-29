@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peeps - Virtual Album</title>
+    <!-- Using Google Fonts for the retro digital look -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        /* Basic page setup */
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%); /* Bright, happy gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            /* Allow scrolling on small screens if content overflows */
+            overflow: auto;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Main container for the stereo */
+        .stereo-container {
+            display: flex;
+            flex-direction: column; /* Stack title and stereo vertically */
+            justify-content: center; /* Center the stereo */
+            align-items: center; /* Center the stereo */
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            width: 95%;
+            box-sizing: border-box;
+        }
+
+        /* NEW: Album Title Styling */
+        #albumTitle {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 3.5rem; /* Large font size */
+            color: #fff;
+            /* Cool 3D/shadow effect */
+            text-shadow: 
+                0 1px 0 #ccc,
+                0 2px 0 #c9c9c9,
+                0 3px 0 #bbb,
+                0 4px 0 #b9b9b9,
+                0 5px 0 #aaa,
+                0 6px 1px rgba(0,0,0,.1),
+                0 0 5px rgba(0,0,0,.1),
+                0 1px 3px rgba(0,0,0,.3),
+                0 3px 5px rgba(0,0,0,.2),
+                0 5px 10px rgba(0,0,0,.25),
+                0 10px 10px rgba(0,0,0,.2),
+                0 20px 20px rgba(0,0,0,.15);
+            margin: 0 0 10px 0; /* Space below title */
+            text-align: center;
+            line-height: 1;
+        }
+
+        /* Main stereo unit */
+        .stereo {
+            background: linear-gradient(145deg, #silver, #e0e0e0);
+            border-radius: 15px;
+            border: 4px solid #aaa;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.5);
+            width: 100%;
+            max-width: 500px; /* Stereo now defines the max width */
+            padding: 25px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Digital screen display */
+        .stereo-screen {
+            font-family: 'Press Start 2P', cursive; /* Pixel font */
+            background: #c0fddc; /* Light green LCD background */
+            border: 4px solid #888;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+            text-shadow: 0 0 2px rgba(6, 99, 44, 0.5);
+            min-height: 70px; /* Ensure screen has height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.5;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .stereo-screen .now-playing-title {
+            font-size: 11px;
+            color: #222;
+            margin-bottom: 5px;
+        }
+        
+        .stereo-screen .error-message {
+            font-size: 10px;
+            color: #d90000; /* Red error text */
+            font-weight: bold;
+        }
+
+        /* Song Brief Styling */
+        .song-brief {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: #333;
+            font-style: italic;
+            margin-top: 8px;
+            opacity: 0.8;
+            line-height: 1.4;
+            /* Ensures text wraps */
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Song list container */
+        .song-list-container {
+            background: rgba(0, 0, 0, 0.05);
+            border: 2px solid #bbb;
+            border-radius: 8px;
+            height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Song list styles */
+        .song-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .song-list li {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .song-list li:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: scale(1.02);
+        }
+
+        /* Highlight the currently playing song */
+        .song-list li.playing {
+            background: #fcf8a0; /* Yellow highlight */
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 230, 0, 0.7);
+        }
+
+        /* Progress Bar Container */
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Time Displays */
+        #currentTime, #totalTime {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            color: #333;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* Progress Bar Styling */
+        #progressBar {
+            flex-grow: 1; /* Take up remaining space */
+            -webkit-appearance: none; /* Remove default styling */
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #555; /* Dark track background */
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            border: 2px solid #999;
+        }
+
+        /* Progress Bar Thumb (Chrome/Safari) */
+        #progressBar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #f0f0f0; /* Light button color */
+            border-radius: 50%;
+            border: 2px solid #333;
+            margin-top: -7px; /* Center thumb on track */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Progress Bar Thumb (Firefox) */
+        #progressBar::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            border: 2px solid #333;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        /* Control buttons */
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .control-btn {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 16px;
+            background: linear-gradient(145deg, #f0f0f0, #c0c0c0);
+            border: 3px solid #999;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .control-btn:active {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transform: translateY(2px);
+            background: linear-gradient(145deg, #c0c0c0, #f0f0f0);
+        }
+
+        #playPauseBtn {
+            width: 70px;
+            height: 70px;
+            font-size: 20px;
+        }
+
+        /* Responsive tweak for title on small screens */
+        @media (max-width: 600px) {
+            #albumTitle {
+                font-size: 2.5rem; /* Make title a bit smaller on mobile */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Main HTML Structure -->
+    <div class="stereo-container">
+        
+        <!-- NEW: Album Title -->
+        <h1 id="albumTitle">PEEPS</h1>
+
+        <!-- Stereo Unit -->
+        <div class="stereo">
+            <!-- Digital Display -->
+            <div class="stereo-screen" id="stereoScreen">
+                <div class="now-playing-title" id="nowPlayingTitle">Now Playing:</div>
+                <div id="nowPlaying">Select a song</div>
+                <!-- Song Brief Display -->
+                <div class="song-brief" id="nowPlayingBrief"></div>
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+
+            <!-- Song List -->
+            <div class="song-list-container">
+                <ul class="song-list" id="songList">
+                    <!-- Songs will be populated by JavaScript -->
+                </ul>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <span id="currentTime">0:00</span>
+                <input type="range" id="progressBar" value="0" min="0" max="100">
+                <span id="totalTime">0:00</span>
+            </div>
+
+            <!-- Playback Controls -->
+            <div class="controls">
+                <button class="control-btn" id="prevBtn" title="Previous">«</button>
+                <button class="control-btn" id="playPauseBtn" title="Play/Pause">►</button>
+                <button class="control-btn" id="nextBtn" title="Next">»</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- The actual audio element, hidden from view -->
+    <audio id="audioPlayer"></audio>
+
+    <!-- JavaScript for functionality -->
+    <script>
+        // --- Song Data ---
+        const songs = [
+            { title: "Jeremy and Jerome", url: "Audio/jeremy-and-jerome.mp3", brief: "A model citizen by day, but by night, the animal is unleashed!" },
+            { title: "Kathleen’s Secret", url: "Audio/kathleens-secret.mp3", brief: "It can satisfy her in a way her husband never could!" },
+            { title: "Claudia Goes North", url: "Audio/claudia-goes-north.mp3", brief: "She moved to a new land, but her Mexican heritage burns deep within her!" },
+            { title: "Dee, Deep Sea", url: "Audio/dee-deep-sea.mp3", brief: "A woman's true career calling!" },
+            { title: "Brett’s Big Realization", url: "Audio/bretts-big-realization.mp3", brief: "He loves his wife, but his true heart is with his husband!" },
+            { title: "Hairy Joe", url: "Audio/hairy-joe.mp3", brief: "A farmer, or a bigfoot?" },
+            { title: "Rebecca’s Rain", url: "Audio/rebeccas-rain.mp3", brief: "The blues are strong when camping gets rainy!" },
+            { title: "Devin the Sparky Sailor", url: "Audio/devin-the-sparky-sailor.mp3", brief: "A hard working man!" },
+            { title: "The Ballad of Matt St. Onge", url: "Audio/the-ballad-of-matt-st-onge.mp3", brief: "\"Dad, did you get a haircut?\" \"No, I got them all cut!\"" },
+            { title: "Oh, Jeremy's Mom", url: "Audio/oh-jeremys-mom.mp3", brief: "There’s no other woman like her!" }
+        ];
+
+        // --- DOM Elements ---
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const songListElement = document.getElementById('songList');
+        const nowPlayingElement = document.getElementById('nowPlaying');
+        const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+        const errorMessageElement = document.getElementById('errorMessage');
+        const nowPlayingBriefElement = document.getElementById('nowPlayingBrief');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeElement = document.getElementById('currentTime');
+        const totalTimeElement = document.getElementById('totalTime');
+
+        // --- State Variables ---
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let hasUserInteracted = false; 
+
+        // --- Helper Function ---
+        function formatTime(seconds) {
+            if (isNaN(seconds) || seconds === 0) return '0:00';
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // --- Core Functions ---
+        function loadSong(index) {
+            clearError();
+            currentSongIndex = index;
+            audioPlayer.src = songs[index].url;
+            nowPlayingElement.textContent = songs[index].title;
+            nowPlayingBriefElement.textContent = songs[index].brief;
+            nowPlayingTitle.style.display = 'block';
+            nowPlayingBriefElement.style.display = 'block'; 
+            updateSongListDisplay();
+            currentTimeElement.textContent = '0:00';
+            totalTimeElement.textContent = '0:00';
+            progressBar.value = 0;
+        }
+
+        function playSong() {
+            hasUserInteracted = true; 
+            isPlaying = true;
+            playPauseBtn.textContent = '❚❚'; 
+            
+            audioPlayer.play().catch(error => {
+                console.error("Play error:", error);
+                if (error.name !== 'AbortError') { 
+                    isPlaying = false;
+                    playPauseBtn.textContent = '►';
+                    updateSongListDisplay();
+                }
+            });
+            updateSongListDisplay();
+        }
+
+        function pauseSong() {
+            isPlaying = false;
+            playPauseBtn.textContent = '►'; 
+            audioPlayer.pause();
+            updateSongListDisplay();
+        }
+
+        function togglePlayPause() {
+            hasUserInteracted = true; 
+            if (isPlaying) {
+                pauseSong();
+            } else {
+                playSong();
+            }
+        }
+
+        function playPrevSong() {
+            hasUserInteracted = true; 
+            currentSongIndex--;
+            if (currentSongIndex < 0) {
+                currentSongIndex = songs.length - 1;
+            }
+            loadSong(currentSongIndex);
+            playSong();
+        }
+
+        function playNextSong() {
+            hasUserInteracted = true; 
+            currentSongIndex++;
+            if (currentSongIndex >= songs.length) {
+                currentSongIndex = 0;
+            }
+            loadSong(currentSongIndex);
+            playSong();
+        }
+
+        function updateSongListDisplay() {
+            songListElement.innerHTML = ''; 
+            songs.forEach((song, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${index + 1}. ${song.title}`;
+                listItem.dataset.index = index;
+                
+                if (index === currentSongIndex) {
+                    listItem.classList.add('playing');
+                }
+                
+                listItem.addEventListener('click', () => {
+                    hasUserInteracted = true; 
+                    if (index !== currentSongIndex) {
+                        loadSong(index);
+                        playSong();
+                    } else if (index === currentSongIndex && !isPlaying) {
+                        playSong();
+                    } else if (index === currentSongIndex && isPlaying) {
+                        pauseSong();
+                    }
+                });
+                songListElement.appendChild(listItem);
+            });
+        }
+
+        // --- Error Handling ---
+        function showError(message) {
+            console.error(message);
+            nowPlayingElement.textContent = "Error";
+            nowPlayingTitle.style.display = 'none';
+            nowPlayingBriefElement.style.display = 'none'; 
+            errorMessageElement.textContent = message;
+            currentTimeElement.textContent = '0:00';
+            totalTimeElement.textContent = '0:00';
+            progressBar.value = 0;
+        }
+
+        function clearError() {
+            errorMessageElement.textContent = '';
+        }
+
+        // --- Event Listeners ---
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        prevBtn.addEventListener('click', playPrevSong);
+        nextBtn.addEventListener('click', playNextSong);
+        
+        audioPlayer.addEventListener('ended', playNextSong); 
+
+        audioPlayer.addEventListener('error', () => {
+            let errorMsg = `Error loading: "${songs[currentSongIndex].title}".`;
+
+            if (audioPlayer.error) {
+                switch (audioPlayer.error.code) {
+                    case audioPlayer.error.MEDIA_ERR_ABORTED:
+                        errorMsg += " Playback aborted.";
+                        break;
+                    case audioPlayer.error.MEDIA_ERR_NETWORK:
+                        errorMsg += " A network error occurred.";
+                        break;
+                    case audioPlayer.error.MEDIA_ERR_DECODE:
+                        errorMsg += " Decoding error.";
+                        break;
+                    case audioPlayer.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                        errorMsg += " Source not found. Make sure files exist and names match.";
+                        break;
+                    default:
+                        errorMsg += " An unknown error occurred.";
+                        break;
+                }
+            } else {
+                 errorMsg += " Source not supported or found.";
+            }
+
+            showError(errorMsg);
+            pauseSong();
+
+            if (hasUserInteracted) {
+                console.log("Attempting to skip to next song...");
+                setTimeout(playNextSong, 1500); 
+            } else {
+                console.log("Audio error on load, waiting for user interaction to skip.");
+            }
+        });
+
+        // --- Progress Bar Event Listeners ---
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (audioPlayer.duration) {
+                const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressBar.value = progressPercent;
+                currentTimeElement.textContent = formatTime(audioPlayer.currentTime);
+            }
+        });
+
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            totalTimeElement.textContent = formatTime(audioPlayer.duration);
+        });
+
+        progressBar.addEventListener('input', () => {
+            if (audioPlayer.duration) {
+                const seekTime = (progressBar.value / 100) * audioPlayer.duration;
+                audioPlayer.currentTime = seekTime;
+            }
+        });
+
+
+        // --- Initial Setup ---
+        updateSongListDisplay();
+        loadSong(currentSongIndex); 
+    </script>
+</body>
+</html>
+
